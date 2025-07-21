@@ -1,0 +1,42 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hibernate
+    username: postgres
+    password: example
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false  # alternative to show sql. But with less information than logger
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  pattern:
+    console: "%d{HH:mm:ss.SSS} %highlight(%-5level) %green(%thread) %cyan(%logger{15}) - %msg %yellow(%mdc) %n"
+  level:
+  # log transaction
+    org.springframework.orm.jpa.JpaTransactionManager: debug
+
+   # log JPA
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.orm.jdbc.bind: TRACE
+
+    # log jdbc
+    org.springframework.jdbc.core.JdbcTemplate: DEBUG
+    org.springframework.jdbc.core.StatementCreatorUtils: TRACE
+
+    # request filter
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+
+springdoc:
+  show-actuator: true
