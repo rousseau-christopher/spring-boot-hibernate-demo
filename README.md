@@ -1,7 +1,8 @@
 # Spring boot JPA with Hibernate
-This project is a demon project to test different pattern with Spring boot data and Jpa.
+This project is a demo project to test different pattern with Spring boot data and Jpa.
 
 ## debug SQL
+To understand what happens, it's better to have all sql and transaction in logs.
 - https://www.baeldung.com/sql-logging-spring-boot
 
 ## N+1 problem with entityGraph
@@ -21,3 +22,7 @@ Pagination and Sorting model can be managed by spring MVC and correctly shown in
 ## Batch Update
 
 ## Steaming
+
+## Transaction
+
+## Test
