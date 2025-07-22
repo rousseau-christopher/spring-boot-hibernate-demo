@@ -3,6 +3,7 @@ package com.zenika.hibernate.application;
 import com.zenika.hibernate.application.model.AuthorDto;
 import com.zenika.hibernate.application.model.BookDto;
 import com.zenika.hibernate.application.model.BookWithAuthorDto;
+import com.zenika.hibernate.application.model.NoteDto;
 import com.zenika.hibernate.domain.LibraryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,12 @@ public class LibraryController {
     BookDto getBook(@PathVariable Long id) {
         log.info("getBook {}", id);
         return libraryService.getBook(id);
+    }
+
+    @PutMapping("book/{id}/note")
+    void updateBook(@PathVariable Long id, @RequestBody NoteDto note) {
+        log.info("Update book {} with note {}", id, note);
+        libraryService.updateNoteUsingQuery(id, note.value());
     }
 
     @GetMapping("bookWithAuthor/{id}")

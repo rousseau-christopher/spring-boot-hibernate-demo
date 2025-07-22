@@ -29,6 +29,7 @@ public class BookEntity {
     private String isbn;
 
     private String label;
+    private Float note;
     private String summary;
 
     @ManyToOne(fetch = FetchType.LAZY)

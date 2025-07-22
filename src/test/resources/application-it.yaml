@@ -2,4 +2,4 @@ spring:
   jpa:
     properties:
       hibernate:
-        generate_statistics: true
+        generate_statistics: true # needed to get he number of query executed in test

@@ -4,5 +4,6 @@ public record BookDto(
         Long id,
         String label,
         String isbn,
-        String summary
+        String summary,
+        Float note
 ) {}

@@ -16,6 +16,7 @@ create table book
     id        bigint not null,
     isbn      varchar(255),
     label     varchar(255),
+    note      float,
     summary   text,
     primary key (id),
     unique (isbn)

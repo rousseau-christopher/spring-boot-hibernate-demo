@@ -9,6 +9,7 @@ import com.zenika.hibernate.domain.mapper.BookMapper;
 import com.zenika.hibernate.infrastructure.repository.AuthorRepository;
 import com.zenika.hibernate.infrastructure.repository.BookEagerRepository;
 import com.zenika.hibernate.infrastructure.repository.BookRepository;
+import com.zenika.hibernate.infrastructure.repository.model.BookEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -65,10 +66,36 @@ public class LibraryService {
     }
 
     public Page<BookWithAuthorDto> all(Pageable pageable) {
-        return bookEagerRepository.findAll(pageable).map(bookMapper::bookEntityToBookWithAuthor);
+        return bookEagerRepository
+                .findAll(pageable)
+                .map(bookMapper::bookEntityToBookWithAuthor);
     }
 
     private static NotFoundException createBookNotFoundException(Long id) {
         return new NotFoundException("Book [" + id + "] not found");
+    }
+
+    /*
+     * This method create 2 query :
+     *
+     * First query to get the book
+     * Second query to update the note
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void updateNote(Long id, Float value) {
+        BookEntity bookEntity = bookRepository
+                .findById(id)
+                .orElseThrow(() -> createBookNotFoundException(id));
+
+        bookEntity.setNote(value);
+        bookRepository.save(bookEntity);
+    }
+
+    /*
+     This method use only one query to update the note
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void updateNoteUsingQuery(Long id, Float value) {
+        bookRepository.updateNote(id, value);
     }
 }

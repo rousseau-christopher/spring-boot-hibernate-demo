@@ -18,11 +18,12 @@ import org.springframework.test.web.servlet.assertj.MockMvcTester;
 @ActiveProfiles("it")
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
-@Sql(scripts = "/data/init.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_CLASS)
+@Sql(scripts = "/data/init.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 @AutoConfigureMockMvc
 public abstract class AbstractSpringBootTest {
     protected static final Long TOLKIEN_ID = 1L;
+    protected static final Long CLEAN_CODE_ID = 4L;
 
     @Autowired
     private SessionFactory sessionFactory;

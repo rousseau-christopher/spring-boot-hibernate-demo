@@ -5,5 +5,6 @@ public record BookWithAuthorDto(
         String label,
         String isbn,
         String summary,
+        Float note,
         AuthorDto author
 ) {}

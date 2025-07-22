@@ -4,6 +4,7 @@ This project is a demo project to test different pattern with Spring boot data a
 ## debug SQL
 To understand what happens, it's better to have all sql and transaction in logs.
 - https://www.baeldung.com/sql-logging-spring-boot
+- In Intellij, there is also a spring debugger plugin : https://www.youtube.com/watch?v=K2tYAHG2XJ8&t=1324s
 
 ## N+1 problem with entityGraph
 @EntityGraph is the Jpa Solution for n+1 problem
