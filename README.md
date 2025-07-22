@@ -20,6 +20,14 @@ Pagination and Sorting model can be managed by spring MVC and correctly shown in
 - https://bootify.io/spring-boot/pagination-in-spring-boot-rest-api.html
 - https://springdoc.org/faq.html#how-can-i-map-pageable-spring-date-commons-object-to-correct-url-parameter-in-swagger-ui
 
+
+## Update using @Query
+update a column with Jpa can be inefficient. Lot of time I see code that read the object from the repository, change fields and save.
+
+This way of updating field create 2 query : one SELECT and one UPDATE
+
+another way is to use @Modify with @Query to update fields at once
+- https://www.baeldung.com/spring-data-jpa-modifying-annotation
 ## Batch Update
 
 ## Steaming
