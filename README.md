@@ -4,6 +4,7 @@ This project is a demo project to test different pattern with Spring boot data a
 ## debug SQL
 To understand what happens, it's better to have all sql and transaction in logs.
 - https://www.baeldung.com/sql-logging-spring-boot
+- https://github.com/jdbc-observations/datasource-proxy?tab=readme-ov-file
 - In Intellij, there is also a spring debugger plugin : https://www.youtube.com/watch?v=K2tYAHG2XJ8&t=1324s
 
 ## N+1 problem with entityGraph
@@ -28,7 +29,13 @@ This way of updating field create 2 query : one SELECT and one UPDATE
 
 another way is to use @Modify with @Query to update fields at once
 - https://www.baeldung.com/spring-data-jpa-modifying-annotation
+
+
 ## Batch Update
+When we have multiple line updates, it's better to regroup them. This will let the DB optimize the multiple insert
+- https://thorben-janssen.com/implementing-bulk-updates-with-spring-data-jpa/
+
+## JSON column in postgresql and jpa
 
 ## Steaming
 

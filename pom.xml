@@ -106,6 +106,12 @@
             <artifactId>postgresql</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>net.ttddyy</groupId>
+            <artifactId>datasource-proxy</artifactId>
+            <scope>test</scope>
+            <version>1.10.1</version>
+        </dependency>
     </dependencies>
 
     <build>

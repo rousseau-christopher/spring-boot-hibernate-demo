@@ -10,8 +10,11 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        jdbc:
+          batch_size: 100
+        order_updates: true
   flyway:
-    enabled: true
+    enabled: false
 
 management:
   endpoints:
@@ -37,6 +40,8 @@ logging:
 
     # request filter
     org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+
+
 
 springdoc:
   show-actuator: true

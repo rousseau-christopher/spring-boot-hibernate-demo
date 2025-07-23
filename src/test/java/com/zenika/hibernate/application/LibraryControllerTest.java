@@ -204,7 +204,7 @@ class LibraryControllerTest extends AbstractSpringBootTest {
                                 }
                                 """
                 );
-        assertThat(getQueryCount()).withFailMessage("Must execute only one query. But found %s", getQueryCount()).isEqualTo(1);
+        assertSelectQueryCount(1);
     }
 
     @Test
@@ -225,7 +225,7 @@ class LibraryControllerTest extends AbstractSpringBootTest {
         logBodyAsJson(exchange.getResponse().getContentAsString());
         assertThat(exchange).hasStatusOk();
 
-        assertThat(getQueryCount()).withFailMessage("Must execute only two query. But found %s", getQueryCount()).isEqualTo(2);
+        assertSelectQueryCount(2);
     }
 
     @SneakyThrows
@@ -234,6 +234,28 @@ class LibraryControllerTest extends AbstractSpringBootTest {
         log.info("Body:\n{}",
                 objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNode)
         );
+    }
+
+    @Test
+    void shouldUpdateNotes() {
+        // GIVEN
+
+        // WHEN
+        MvcTestResult exchange = mockMvcTester.put()
+                .uri("/library/randomNote")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                            "ids": [ 1, 2, 3, 4, 5 ]
+                        }
+                        """)
+                .exchange();
+
+        // THEN
+        assertThat(exchange)
+                .hasStatusOk();
+
+        assertUpdateQueryCount(2);
     }
 
 }

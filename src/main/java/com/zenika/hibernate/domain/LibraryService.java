@@ -2,6 +2,7 @@ package com.zenika.hibernate.domain;
 
 import com.zenika.hibernate.application.model.AuthorDto;
 import com.zenika.hibernate.application.model.BookDto;
+import com.zenika.hibernate.application.model.BookIds;
 import com.zenika.hibernate.application.model.BookWithAuthorDto;
 import com.zenika.hibernate.domain.exception.NotFoundException;
 import com.zenika.hibernate.domain.mapper.AuthorMapper;
@@ -18,9 +19,10 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Random;
 
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = true) // by default we will use a read only transaction
 @RequiredArgsConstructor
 public class LibraryService {
     private final AuthorRepository authorRepository;
@@ -76,7 +78,7 @@ public class LibraryService {
     }
 
     /*
-     * This method create 2 query :
+     * This method creates 2 queries :
      *
      * First query to get the book
      * Second query to update the note
@@ -92,10 +94,24 @@ public class LibraryService {
     }
 
     /*
-     This method use only one query to update the note
+     This method uses only one query to update the note
      */
     @Transactional(propagation = Propagation.REQUIRED)
     public void updateNoteUsingQuery(Long id, Float value) {
         bookRepository.updateNote(id, value);
+    }
+
+    private final Random random = new Random();
+    /**
+     * This method will do a batch update of the books
+     */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void updateNorFor(BookIds bookIds) {
+        List<BookEntity> books = bookRepository
+                .findAllById(bookIds.ids());
+        books.forEach(bookEntity -> bookEntity.setNote(random.nextFloat(10)));
+
+
+        bookRepository.saveAll(books);
     }
 }

@@ -1,9 +1,6 @@
 package com.zenika.hibernate.application;
 
-import com.zenika.hibernate.application.model.AuthorDto;
-import com.zenika.hibernate.application.model.BookDto;
-import com.zenika.hibernate.application.model.BookWithAuthorDto;
-import com.zenika.hibernate.application.model.NoteDto;
+import com.zenika.hibernate.application.model.*;
 import com.zenika.hibernate.domain.LibraryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,8 +56,14 @@ public class LibraryController {
     }
 
     @GetMapping("/all")
-    Page<BookWithAuthorDto> findAll(@ParameterObject @PageableDefault(page = 0, size = 1) Pageable pageable) {
+    Page<BookWithAuthorDto> findAll(@ParameterObject @PageableDefault(size = 1) Pageable pageable) {
         log.info("findAll, pageable {}", pageable);
         return libraryService.all(pageable);
+    }
+
+    @PutMapping("/randomNote")
+    void setRandomNote(@RequestBody BookIds bookIds) {
+        log.info("Set Random Not For: {}", bookIds);
+        libraryService.updateNorFor(bookIds);
     }
 }
