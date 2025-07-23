@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
 
+import static com.zenika.hibernate.querycount.AssertQuery.assertSelectQueryCount;
+import static com.zenika.hibernate.querycount.AssertQuery.assertUpdateQueryCount;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -104,9 +106,12 @@ class LibraryControllerTest extends AbstractSpringBootTest {
         // THEN
         assertThat(exchange)
                 .hasStatusOk();
+        assertUpdateQueryCount(1);
+
         BookEntity book = bookRepository.findById(CLEAN_CODE_ID).orElseThrow();
         log.info("Book: {}", book);
         assertThat(book.getNote()).isEqualTo(note);
+
     }
 
 
@@ -255,7 +260,7 @@ class LibraryControllerTest extends AbstractSpringBootTest {
         assertThat(exchange)
                 .hasStatusOk();
 
-        assertUpdateQueryCount(2);
+        assertUpdateQueryCount(2); // Batch size is 3
     }
 
 }

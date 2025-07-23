@@ -1,4 +1,4 @@
-package com.zenika.hibernate;
+package com.zenika.hibernate.querycount;
 
 import net.ttddyy.dsproxy.listener.ChainListener;
 import net.ttddyy.dsproxy.listener.DataSourceQueryCountListener;
@@ -16,6 +16,9 @@ import org.springframework.util.ReflectionUtils;
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
 
+/**
+ * Work if we have one datasource.
+ */
 @Component
 public class DatasourceProxyBeanPostProcessor implements BeanPostProcessor {
     @Override
