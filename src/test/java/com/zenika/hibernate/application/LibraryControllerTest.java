@@ -9,10 +9,7 @@ import com.zenika.hibernate.infrastructure.repository.model.BookEntity;
 import jakarta.transaction.Transactional;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
@@ -261,6 +258,26 @@ class LibraryControllerTest extends AbstractSpringBootTest {
                 .hasStatusOk();
 
         assertUpdateQueryCount(2); // Batch size is 3
+    }
+
+    @Test
+    @SneakyThrows
+    @Disabled("cannot work the way it's implement. See controller comment")
+    void shouldGetBooksUsingStream() {
+        // GIVEN
+
+        // WHEN
+        MvcTestResult exchange = mockMvcTester.get()
+                .uri("/library/author/{id}/book", TOLKIEN_ID)
+                .exchange();
+
+        // THEN
+        logBodyAsJson(exchange.getResponse().getContentAsString());
+
+        assertThat(exchange)
+                .hasStatusOk();
+
+
     }
 
 }

@@ -8,9 +8,11 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Slf4j
 @RestController
@@ -41,6 +43,17 @@ public class LibraryController {
     BookDto getBook(@PathVariable Long id) {
         log.info("getBook {}", id);
         return libraryService.getBook(id);
+    }
+
+    /**
+     * Impossible to make it like this : the stream is close before being read and convert to json!!!!
+     * @param id author id
+     */
+    @GetMapping("author/{id}/book")
+    @Transactional(readOnly = true)
+    Stream<BookWithAuthorDto> getBooksForAuthor(@PathVariable Long id) {
+        log.info("get All Books using Stream");
+        return libraryService.getBooks(id);
     }
 
     @PutMapping("book/{id}/note")

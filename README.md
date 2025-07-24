@@ -35,9 +35,20 @@ another way is to use @Modify with @Query to update fields at once
 When we have multiple line updates, it's better to regroup them. This will let the DB optimize the multiple insert
 - https://thorben-janssen.com/implementing-bulk-updates-with-spring-data-jpa/
 
-## JSON column in postgresql and jpa
-
+## JSON column in postgresql with jpa
+postgres can store json in 2 format : json and jsonb
+jsonb seams better; https://www.dbvis.com/thetable/json-vs-jsonb-in-postgresql-a-complete-comparison/
+- https://www.baeldung.com/spring-boot-jpa-storing-postgresql-jsonb
+- 
 ## Steaming
+There is a lot of problem then streaming over Api:
+- the stream will be close by the transaction manager before sended to the api
+- Entities will stay in memory because of the hibernate cache
+- How to stream data: https://vladmihalcea.com/spring-data-jpa-stream/
+- How to stream memory efficiently: https://dev.to/ratulsharker/streaming-large-json-response-in-spring-2pho
+
+## Auditing
+- https://www.baeldung.com/database-auditing-jpa
 
 ## Transaction
 

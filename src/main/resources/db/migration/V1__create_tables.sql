@@ -7,6 +7,7 @@ create table author
     id        bigint not null,
     firstname varchar(255),
     lastname  varchar(255),
+    data   jsonb,
     primary key (id)
 );
 
