@@ -23,12 +23,10 @@ public class QueryCountUtil {
                 Nb Insert {}
                 Nb Update {}
                 Nb Delete {}
-                Stats: {}
                 """,
                 queryCount.getSelect(),
                 queryCount.getUpdate(),
-                queryCount.getDelete(),
-                queryCount
+                queryCount.getDelete()
         );
     }
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.envers.Audited;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @Table(name = "author")
 @ToString(exclude = "book")
+@Audited
 public class AuthorEntity{
         private static final String AUTHOR_SEQUENCE = "author_seq";
 

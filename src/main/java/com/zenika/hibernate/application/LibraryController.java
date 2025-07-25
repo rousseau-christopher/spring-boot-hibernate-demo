@@ -45,6 +45,12 @@ public class LibraryController {
         return libraryService.getBook(id);
     }
 
+    @PostMapping("author/{authorId}/book")
+    long addBook(@PathVariable long authorId,@RequestBody NewBookDto bookDto) {
+        log.info("addBook {}", bookDto);
+        return libraryService.addBook(authorId, bookDto);
+    }
+
     /**
      * Impossible to make it like this : the stream is close before being read and convert to json!!!!
      * @param id author id
@@ -57,9 +63,9 @@ public class LibraryController {
     }
 
     @PutMapping("book/{id}/note")
-    void updateBook(@PathVariable Long id, @RequestBody NoteDto note) {
+    void updateBookNote(@PathVariable Long id, @RequestBody NoteDto note) {
         log.info("Update book {} with note {}", id, note);
-        libraryService.updateNoteUsingQuery(id, note.value());
+        libraryService.updateNote(id, note.value());
     }
 
     @GetMapping("bookWithAuthor/{id}")
@@ -78,5 +84,12 @@ public class LibraryController {
     void setRandomNote(@RequestBody BookIds bookIds) {
         log.info("Set Random Not For: {}", bookIds);
         libraryService.updateNorFor(bookIds);
+    }
+
+    @GetMapping("/book/{bookId}/audit")
+    List<BookDto> auditBook(@PathVariable Long bookId) {
+        log.info("Auditing Book {}", bookId);
+
+        return libraryService.auditBook(bookId);
     }
 }

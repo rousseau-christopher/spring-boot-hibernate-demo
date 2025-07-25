@@ -7,7 +7,7 @@ spring:
 
 logging:
   level:
-    net.ttddyy.dsproxy.listener.logging: DEBUG
+    SQL: INFO
 
     # log transaction
     org.springframework.orm.jpa.JpaTransactionManager: debug

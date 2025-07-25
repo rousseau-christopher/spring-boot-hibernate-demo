@@ -7,6 +7,11 @@ To understand what happens, it's better to have all sql and transaction in logs.
 - https://github.com/jdbc-observations/datasource-proxy?tab=readme-ov-file
 - In Intellij, there is also a spring debugger plugin : https://www.youtube.com/watch?v=K2tYAHG2XJ8&t=1324s
 
+## Open Session in View
+Spring automatically open a session on the controller layer. It will also auto-commit<br/>
+It's usually better to have a controller over this.
+- https://www.baeldung.com/spring-open-session-in-view
+
 ## N+1 problem with entityGraph
 @EntityGraph is the Jpa Solution for n+1 problem
 - https://www.baeldung.com/spring-data-jpa-named-entity-graphs
@@ -39,7 +44,8 @@ When we have multiple line updates, it's better to regroup them. This will let t
 postgres can store json in 2 format : json and jsonb
 jsonb seams better; https://www.dbvis.com/thetable/json-vs-jsonb-in-postgresql-a-complete-comparison/
 - https://www.baeldung.com/spring-boot-jpa-storing-postgresql-jsonb
-- 
+
+
 ## Steaming
 There is a lot of problem then streaming over Api:
 - the stream will be close by the transaction manager before sended to the api
@@ -48,7 +54,11 @@ There is a lot of problem then streaming over Api:
 - How to stream memory efficiently: https://dev.to/ratulsharker/streaming-large-json-response-in-spring-2pho
 
 ## Auditing
+- https://docs.spring.io/spring-data/jpa/reference/auditing.html
 - https://www.baeldung.com/database-auditing-jpa
+- https://vladmihalcea.com/the-best-way-to-implement-an-audit-log-using-hibernate-envers/
+- https://www.baeldung.com/java-hibernate-envers-extending-revision-custom-fields
+- https://thorben-janssen.com/hibernate-envers-query-data-audit-log/
 
 ## Transaction
 

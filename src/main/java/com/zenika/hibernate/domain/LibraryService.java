@@ -1,29 +1,29 @@
 package com.zenika.hibernate.domain;
 
-import com.zenika.hibernate.application.model.AuthorDto;
-import com.zenika.hibernate.application.model.BookDto;
-import com.zenika.hibernate.application.model.BookIds;
-import com.zenika.hibernate.application.model.BookWithAuthorDto;
+import com.zenika.hibernate.application.model.*;
 import com.zenika.hibernate.domain.exception.NotFoundException;
 import com.zenika.hibernate.domain.mapper.AuthorMapper;
 import com.zenika.hibernate.domain.mapper.BookMapper;
 import com.zenika.hibernate.infrastructure.repository.AuthorRepository;
 import com.zenika.hibernate.infrastructure.repository.BookEagerRepository;
 import com.zenika.hibernate.infrastructure.repository.BookRepository;
+import com.zenika.hibernate.infrastructure.repository.model.AuthorEntity;
 import com.zenika.hibernate.infrastructure.repository.model.BookEntity;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.query.AuditEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Random;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 @Service
-@Transactional(readOnly = true) // by default we will use a read only transaction
+@Transactional(readOnly = true) // by default, we will use a read only transaction
 @RequiredArgsConstructor
 public class LibraryService {
     private final AuthorRepository authorRepository;
@@ -31,12 +31,15 @@ public class LibraryService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
     private final BookEagerRepository bookEagerRepository;
+    private final AuditReader auditReader;
 
     public AuthorDto getAuthor(Long id) {
         return authorRepository.findById(id)
                 .map(authorMapper::authorEntityToDto)
-                .orElseThrow(() -> new NotFoundException("Author [" + id + "] not found"));
+                .orElseThrow(authorNotFoundException(id));
     }
+
+
 
     public List<AuthorDto> getAuthors() {
         return authorRepository.findAll().stream()
@@ -44,7 +47,7 @@ public class LibraryService {
                 .toList();
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     public void deleteAuthor(Long id) {
         authorRepository.deleteById(id);
     }
@@ -53,19 +56,19 @@ public class LibraryService {
     public BookDto getBook(Long id) {
         return bookRepository.findById(id)
                 .map(bookMapper::bookEntityToDto)
-                .orElseThrow(() -> createBookNotFoundException(id));
+                .orElseThrow(bookNotFoundException(id));
     }
 
     public BookWithAuthorDto getBookWithAuthor(Long id) {
         return bookEagerRepository.findById(id)
                 .map(bookMapper::bookEntityToBookWithAuthor)
-                .orElseThrow(() -> createBookNotFoundException(id));
+                .orElseThrow(bookNotFoundException(id));
     }
 
     public BookWithAuthorDto getBookWithAuthorUsingQuery(Long id) {
         return bookRepository.retrieveABookWithHisAuthor(id)
                 .map(bookMapper::bookEntityToBookWithAuthor)
-                .orElseThrow(() -> createBookNotFoundException(id));
+                .orElseThrow(bookNotFoundException(id));
     }
 
     public Page<BookWithAuthorDto> all(Pageable pageable) {
@@ -74,9 +77,7 @@ public class LibraryService {
                 .map(bookMapper::bookEntityToBookWithAuthor);
     }
 
-    private static NotFoundException createBookNotFoundException(Long id) {
-        return new NotFoundException("Book [" + id + "] not found");
-    }
+
 
     /*
      * This method creates 2 queries :
@@ -84,11 +85,11 @@ public class LibraryService {
      * First query to get the book
      * Second query to update the note
      */
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     public void updateNote(Long id, Float value) {
         BookEntity bookEntity = bookRepository
                 .findById(id)
-                .orElseThrow(() -> createBookNotFoundException(id));
+                .orElseThrow(bookNotFoundException(id));
 
         bookEntity.setNote(value);
         bookRepository.save(bookEntity);
@@ -97,7 +98,7 @@ public class LibraryService {
     /*
      This method uses only one query to update the note
      */
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     public void updateNoteUsingQuery(Long id, Float value) {
         bookRepository.updateNote(id, value);
     }
@@ -106,7 +107,7 @@ public class LibraryService {
     /**
      * This method will do a batch update of the books
      */
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional
     public void updateNorFor(BookIds bookIds) {
         List<BookEntity> books = bookRepository
                 .findAllById(bookIds.ids());
@@ -118,5 +119,36 @@ public class LibraryService {
     public Stream<BookWithAuthorDto> getBooks(Long authorId) {
         return bookRepository.findAllByAuthorId(authorId)
                 .map(bookMapper::bookEntityToBookWithAuthor);
+    }
+
+    @Transactional
+    public long addBook(long authorId, NewBookDto bookDto) {
+        AuthorEntity authorEntity = authorRepository.findById(authorId)
+                .orElseThrow(authorNotFoundException(authorId));
+
+        BookEntity bookEntity = bookMapper.bookDtoToEntity(bookDto);
+        bookEntity.setAuthor(authorEntity);
+        bookRepository.save(bookEntity);
+
+        return bookEntity.getId();
+    }
+
+    private static Supplier<NotFoundException> bookNotFoundException(Long id) {
+        return () -> new NotFoundException("Book [" + id + "] not found");
+    }
+
+    private static Supplier<NotFoundException> authorNotFoundException(Long id) {
+        return () -> new NotFoundException("Author [" + id + "] not found");
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<BookDto> auditBook(Long bookId) {
+        List<BookEntity> resultList = auditReader
+                .createQuery()
+                .forRevisionsOfEntity(BookEntity.class, true, true)
+                .add(AuditEntity.id().eq(bookId))
+                .getResultList();
+
+        return bookMapper.booksToDto( resultList);
     }
 }

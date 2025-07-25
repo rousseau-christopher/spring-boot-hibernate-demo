@@ -4,13 +4,14 @@ import com.zenika.hibernate.infrastructure.repository.model.BookEntity;
 import jakarta.persistence.QueryHint;
 import org.hibernate.jpa.HibernateHints;
 import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.history.RevisionRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 import java.util.stream.Stream;
 
 @Repository
-public interface BookRepository extends JpaRepository<BookEntity, Long> {
+public interface BookRepository extends JpaRepository<BookEntity, Long>, RevisionRepository<BookEntity, Long, Long> {
 
     @Query("""
             SELECT book
