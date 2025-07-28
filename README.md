@@ -63,6 +63,7 @@ There is a lot of problem then streaming over Api:
 - https://www.baeldung.com/java-hibernate-envers-extending-revision-custom-fields
 - https://thorben-janssen.com/hibernate-envers-query-data-audit-log/
 - https://vladmihalcea.com/spring-data-envers/
+- https://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html#envers-revisionlog
 
 There are limit with hibernate enver. Only action on managed entity are audited. Any modification done with @query @Modifying are not audited !
 

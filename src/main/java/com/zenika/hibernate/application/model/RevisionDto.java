@@ -5,9 +5,10 @@ import org.springframework.data.history.RevisionMetadata.RevisionType;
 import java.time.Instant;
 
 public record RevisionDto(
-        Integer revisionNumber,
+        Long revisionNumber,
         Instant revisionDate,
         RevisionType revisionType,
+        String username,
         BookDto book
 ) {
 }

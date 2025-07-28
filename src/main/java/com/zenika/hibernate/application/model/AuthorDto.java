@@ -3,5 +3,6 @@ package com.zenika.hibernate.application.model;
 public record AuthorDto(
         Long id,
         String firstname,
-        String lastname
+        String lastname,
+        AuditMetaDataDto auditMetaData
 ) {}

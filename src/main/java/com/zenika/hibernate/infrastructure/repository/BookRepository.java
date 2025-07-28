@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 @Repository
 public interface BookRepository extends
         JpaRepository<BookEntity, Long>,
-        RevisionRepository<BookEntity, Long, Integer> {
+        RevisionRepository<BookEntity, Long, Long> {
 
     @Query("""
             SELECT book

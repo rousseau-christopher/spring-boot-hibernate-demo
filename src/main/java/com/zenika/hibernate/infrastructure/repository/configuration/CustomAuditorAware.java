@@ -8,6 +8,7 @@ import java.util.Optional;
 
 /**
  * Can be implemented to get the current connected user using Spring Security
+ * It's better to choose between Hibernate Audit and Anver
  */
 @Service
 public class CustomAuditorAware implements AuditorAware<String> {

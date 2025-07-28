@@ -9,6 +9,7 @@ import com.zenika.hibernate.infrastructure.repository.BookEagerRepository;
 import com.zenika.hibernate.infrastructure.repository.BookRepository;
 import com.zenika.hibernate.infrastructure.repository.model.AuthorEntity;
 import com.zenika.hibernate.infrastructure.repository.model.BookEntity;
+import com.zenika.hibernate.infrastructure.repository.model.CustomRevisionEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -147,13 +148,20 @@ public class LibraryService {
 
     public List<RevisionDto> listBookRevision(Long bookId) {
         return bookRepository.findRevisions(bookId).stream()
-                .map(revision ->
-                        new RevisionDto(
-                                revision.getMetadata().getRequiredRevisionNumber(),
-                                revision.getMetadata().getRequiredRevisionInstant(),
-                                revision.getMetadata().getRevisionType(),
-                                bookMapper.bookEntityToDto(revision.getEntity())
-                        )
+                .map(revision -> {
+                    String username = "Unknown";
+                            if (revision.getMetadata().getDelegate() instanceof CustomRevisionEntity customRevisionEntity) {
+                                username = customRevisionEntity.getUsername();
+                            }
+
+                            return new RevisionDto(
+                                    revision.getMetadata().getRequiredRevisionNumber(),
+                                    revision.getMetadata().getRequiredRevisionInstant(),
+                                    revision.getMetadata().getRevisionType(),
+                                    username,
+                                    bookMapper.bookEntityToDto(revision.getEntity())
+                            );
+                        }
                 )
                 .toList();
     }
