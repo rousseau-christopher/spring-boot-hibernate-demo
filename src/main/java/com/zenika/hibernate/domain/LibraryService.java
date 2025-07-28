@@ -10,8 +10,7 @@ import com.zenika.hibernate.infrastructure.repository.BookRepository;
 import com.zenika.hibernate.infrastructure.repository.model.AuthorEntity;
 import com.zenika.hibernate.infrastructure.repository.model.BookEntity;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.envers.AuditReader;
-import org.hibernate.envers.query.AuditEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,6 +21,7 @@ import java.util.Random;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true) // by default, we will use a read only transaction
 @RequiredArgsConstructor
@@ -31,7 +31,6 @@ public class LibraryService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
     private final BookEagerRepository bookEagerRepository;
-    private final AuditReader auditReader;
 
     public AuthorDto getAuthor(Long id) {
         return authorRepository.findById(id)
@@ -108,12 +107,17 @@ public class LibraryService {
      * This method will do a batch update of the books
      */
     @Transactional
-    public void updateNorFor(BookIds bookIds) {
+    public void updateNotesFor(BookIds bookIds) {
         List<BookEntity> books = bookRepository
                 .findAllById(bookIds.ids());
         books.forEach(bookEntity -> bookEntity.setNote(random.nextFloat(10)));
 
         bookRepository.saveAll(books);
+    }
+
+    @Transactional
+    public void deleteBook(long bookId) {
+        bookRepository.deleteById(bookId);
     }
 
     public Stream<BookWithAuthorDto> getBooks(Long authorId) {
@@ -141,14 +145,16 @@ public class LibraryService {
         return () -> new NotFoundException("Author [" + id + "] not found");
     }
 
-    @SuppressWarnings("unchecked")
-    public List<BookDto> auditBook(Long bookId) {
-        List<BookEntity> resultList = auditReader
-                .createQuery()
-                .forRevisionsOfEntity(BookEntity.class, true, true)
-                .add(AuditEntity.id().eq(bookId))
-                .getResultList();
-
-        return bookMapper.booksToDto( resultList);
+    public List<RevisionDto> listBookRevision(Long bookId) {
+        return bookRepository.findRevisions(bookId).stream()
+                .map(revision ->
+                        new RevisionDto(
+                                revision.getMetadata().getRequiredRevisionNumber(),
+                                revision.getMetadata().getRequiredRevisionInstant(),
+                                revision.getMetadata().getRevisionType(),
+                                bookMapper.bookEntityToDto(revision.getEntity())
+                        )
+                )
+                .toList();
     }
 }

@@ -21,6 +21,9 @@ Beware of Equal, HashCode and ToString. They can pull all your lazy Fetch !!!
 - https://thorben-janssen.com/ultimate-guide-to-implementing-equals-and-hashcode-with-hibernate/
 - https://jpa-buddy.com/blog/hopefully-the-final-article-about-equals-and-hashcode-for-jpa-entities-with-db-generated-ids/
 
+## Inheritance
+- https://www.baeldung.com/hibernate-inheritance
+
 ## Pagination and Sorting using Pageable
 Pagination and Sorting model can be managed by spring MVC and correctly shown in Swagger ui
 - https://bootify.io/spring-boot/pagination-in-spring-boot-rest-api.html
@@ -59,7 +62,16 @@ There is a lot of problem then streaming over Api:
 - https://vladmihalcea.com/the-best-way-to-implement-an-audit-log-using-hibernate-envers/
 - https://www.baeldung.com/java-hibernate-envers-extending-revision-custom-fields
 - https://thorben-janssen.com/hibernate-envers-query-data-audit-log/
+- https://vladmihalcea.com/spring-data-envers/
+
+There are limit with hibernate enver. Only action on managed entity are audited. Any modification done with @query @Modifying are not audited !
 
 ## Transaction
+With hibernate it's best to always have a transaction then accessing database. You can set a readonly transaction then not changing database. It can improve speed. And it will cancel all database modification if they are not inside a write transaction !
+
+
+## Locking
+- https://www.baeldung.com/jpa-pessimistic-locking
+- https://www.baeldung.com/jpa-optimistic-locking
 
 ## Test

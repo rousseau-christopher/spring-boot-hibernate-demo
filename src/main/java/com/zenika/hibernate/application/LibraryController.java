@@ -83,13 +83,13 @@ public class LibraryController {
     @PutMapping("/randomNote")
     void setRandomNote(@RequestBody BookIds bookIds) {
         log.info("Set Random Not For: {}", bookIds);
-        libraryService.updateNorFor(bookIds);
+        libraryService.updateNotesFor(bookIds);
     }
 
     @GetMapping("/book/{bookId}/audit")
-    List<BookDto> auditBook(@PathVariable Long bookId) {
+    List<RevisionDto> auditBook(@PathVariable Long bookId) {
         log.info("Auditing Book {}", bookId);
 
-        return libraryService.auditBook(bookId);
+        return libraryService.listBookRevision(bookId);
     }
 }

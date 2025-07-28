@@ -26,18 +26,6 @@ public class TestService {
         return book.getId();
     }
 
-    @Transactional
-    public void updateNoteForBook(long bookId, float note) {
-        BookEntity book = bookRepository.findById(bookId).orElseThrow();
-        book.setNote(note);
-        bookRepository.save(book);
-    }
-
-    @Transactional
-    public void updateNoteForBookWithQuery(long bookId, float note) {
-        bookRepository.updateNote(bookId, note);
-    }
-
 
     private AuthorEntity createAuthor() {
         AuthorEntity author = new AuthorEntity();

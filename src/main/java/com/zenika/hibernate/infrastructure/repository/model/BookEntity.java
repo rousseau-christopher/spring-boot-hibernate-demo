@@ -9,12 +9,7 @@ import lombok.ToString;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.envers.Audited;
 import org.jspecify.annotations.NonNull;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.Instant;
 import java.util.Objects;
 
 @Getter
@@ -23,8 +18,7 @@ import java.util.Objects;
 @Table(name = "book")
 @ToString(exclude = "author")
 @Audited
-@EntityListeners(AuditingEntityListener.class)
-public class BookEntity {
+public class BookEntity extends AbstractAuditEntity{
     private static final String BOOK_SEQUENCE = "book_seq";
 
     @Id
@@ -46,17 +40,6 @@ public class BookEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false, foreignKey = @ForeignKey(name = "author_foreign_key"))
     private AuthorEntity author;
-
-    @CreatedDate
-    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE", nullable = false, updatable = false)
-    private Instant createdDate;
-
-    @LastModifiedDate
-    @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE", nullable = false)
-    private Instant modifiedDate;
-
-    @LastModifiedBy
-    private String lastModifiedBy;
 
     public BookEntity() {
     }

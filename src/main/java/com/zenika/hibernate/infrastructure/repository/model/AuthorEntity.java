@@ -16,7 +16,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Table(name = "author")
 @ToString(exclude = "book")
 @Audited
-public class AuthorEntity{
+public class AuthorEntity extends AbstractAuditEntity{
         private static final String AUTHOR_SEQUENCE = "author_seq";
 
         @Id

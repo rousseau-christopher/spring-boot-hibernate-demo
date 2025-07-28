@@ -12,7 +12,9 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Mapper(componentModel = SPRING)
 public interface BookMapper {
+
     BookDto bookEntityToDto(BookEntity book);
+
     List<BookDto> booksToDto(List<BookEntity> books);
 
     BookEntity bookDtoToEntity(NewBookDto bookDto);

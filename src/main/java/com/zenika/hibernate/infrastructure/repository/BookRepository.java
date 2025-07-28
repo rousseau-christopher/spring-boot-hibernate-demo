@@ -11,7 +11,9 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Repository
-public interface BookRepository extends JpaRepository<BookEntity, Long>, RevisionRepository<BookEntity, Long, Long> {
+public interface BookRepository extends
+        JpaRepository<BookEntity, Long>,
+        RevisionRepository<BookEntity, Long, Integer> {
 
     @Query("""
             SELECT book
@@ -19,7 +21,7 @@ public interface BookRepository extends JpaRepository<BookEntity, Long>, Revisio
                 JOIN FETCH book.author
               WHERE book.id = :bookId
             """
-)
+    )
     Optional<BookEntity> retrieveABookWithHisAuthor(Long bookId);
 
     @Modifying

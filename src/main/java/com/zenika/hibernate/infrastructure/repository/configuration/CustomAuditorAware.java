@@ -1,5 +1,6 @@
 package com.zenika.hibernate.infrastructure.repository.configuration;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ public class CustomAuditorAware implements AuditorAware<String> {
 
 
     @Override
-    public Optional<String> getCurrentAuditor() {
+    public @NonNull Optional<String> getCurrentAuditor() {
         return Optional.of("TODO: Current username");
     }
 }
