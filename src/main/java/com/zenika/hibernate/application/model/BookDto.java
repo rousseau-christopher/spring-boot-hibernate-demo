@@ -1,7 +1,7 @@
 package com.zenika.hibernate.application.model;
 
 public record BookDto(
-        Long id,
+        long id,
         String label,
         String isbn,
         String summary,

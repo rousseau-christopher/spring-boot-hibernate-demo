@@ -1,6 +1,5 @@
-package com.zenika.hibernate.infrastructure.repository.configuration;
+package com.zenika.hibernate.infrastructure.repository.configuration.enver;
 
-import com.zenika.hibernate.infrastructure.repository.model.CustomRevisionEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.envers.RevisionListener;
 import org.springframework.stereotype.Component;

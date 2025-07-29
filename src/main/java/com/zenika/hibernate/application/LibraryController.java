@@ -71,7 +71,7 @@ public class LibraryController {
     @GetMapping("bookWithAuthor/{id}")
     BookWithAuthorDto getBookWithAuthor(@PathVariable Long id) {
         log.info("getBookWithAuthor {}", id);
-        return libraryService.getBookWithAuthorUsingQuery(id);
+        return libraryService.getBookWithAuthor(id);
     }
 
     @GetMapping("/all")

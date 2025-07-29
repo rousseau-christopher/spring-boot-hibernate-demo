@@ -1,8 +1,10 @@
 package com.zenika.hibernate.infrastructure.repository;
 
 import com.zenika.hibernate.infrastructure.repository.model.BookEntity;
+import jakarta.persistence.LockModeType;
 import jakarta.persistence.QueryHint;
 import org.hibernate.jpa.HibernateHints;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.history.RevisionRepository;
 import org.springframework.stereotype.Repository;
@@ -14,6 +16,13 @@ import java.util.stream.Stream;
 public interface BookRepository extends
         JpaRepository<BookEntity, Long>,
         RevisionRepository<BookEntity, Long, Long> {
+
+    /**
+     * we can add arbitrary text between find and By to describe the query
+     */
+    @EntityGraph(attributePaths = "author")
+    @NonNull
+    Optional<BookEntity> findWithAuthorById(@NonNull Long id);
 
     @Query("""
             SELECT book
@@ -34,5 +43,11 @@ public interface BookRepository extends
     )
     @EntityGraph(attributePaths = "author")
     Stream<BookEntity> findAllByAuthorId(long authorId);
+
+    /*
+        Pessimistic lock
+     */
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    Optional<BookEntity> findLockedById(Long id);
 
 }

@@ -23,6 +23,10 @@ public class AuthorEntity extends AbstractAuditEntity{
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = AUTHOR_SEQUENCE)
         @SequenceGenerator(name = AUTHOR_SEQUENCE, sequenceName = AUTHOR_SEQUENCE, allocationSize = 1)
         private Long id;
+
+        @Version
+        private int version;
+
         private String firstname;
         private String lastname;
 

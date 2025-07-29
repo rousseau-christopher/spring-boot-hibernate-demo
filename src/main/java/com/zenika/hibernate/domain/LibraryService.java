@@ -9,7 +9,7 @@ import com.zenika.hibernate.infrastructure.repository.BookEagerRepository;
 import com.zenika.hibernate.infrastructure.repository.BookRepository;
 import com.zenika.hibernate.infrastructure.repository.model.AuthorEntity;
 import com.zenika.hibernate.infrastructure.repository.model.BookEntity;
-import com.zenika.hibernate.infrastructure.repository.model.CustomRevisionEntity;
+import com.zenika.hibernate.infrastructure.repository.configuration.enver.CustomRevisionEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -60,7 +60,7 @@ public class LibraryService {
     }
 
     public BookWithAuthorDto getBookWithAuthor(Long id) {
-        return bookEagerRepository.findById(id)
+        return bookRepository.findWithAuthorById(id)
                 .map(bookMapper::bookEntityToBookWithAuthor)
                 .orElseThrow(bookNotFoundException(id));
     }
@@ -88,7 +88,7 @@ public class LibraryService {
     @Transactional
     public void updateNote(Long id, Float value) {
         BookEntity bookEntity = bookRepository
-                .findById(id)
+                .findLockedById(id)
                 .orElseThrow(bookNotFoundException(id));
 
         bookEntity.setNote(value);
@@ -96,7 +96,8 @@ public class LibraryService {
     }
 
     /*
-     This method uses only one query to update the note
+     This method uses only one query to update the note.
+     But it's not audited by hibernate enver !!!
      */
     @Transactional
     public void updateNoteUsingQuery(Long id, Float value) {

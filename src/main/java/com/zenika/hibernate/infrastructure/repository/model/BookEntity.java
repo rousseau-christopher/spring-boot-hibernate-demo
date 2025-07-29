@@ -26,6 +26,10 @@ public class BookEntity extends AbstractAuditEntity{
     @SequenceGenerator(name = BOOK_SEQUENCE, sequenceName = BOOK_SEQUENCE, allocationSize = 1)
     private Long id;
 
+    @Version
+    private int version;
+
+
     @NaturalId
     @Setter(AccessLevel.NONE)
     @NonNull

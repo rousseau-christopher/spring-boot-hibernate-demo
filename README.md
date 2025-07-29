@@ -74,5 +74,6 @@ With hibernate it's best to always have a transaction then accessing database. Y
 ## Locking
 - https://www.baeldung.com/jpa-pessimistic-locking
 - https://www.baeldung.com/jpa-optimistic-locking
-
+- https://medium.com/jpa-java-persistence-api-guide/optimistic-vs-pessimistic-locking-in-spring-data-69ae32402fe3
+- https://discourse.hibernate.org/t/envers-version-field-is-nul/2113
 ## Test

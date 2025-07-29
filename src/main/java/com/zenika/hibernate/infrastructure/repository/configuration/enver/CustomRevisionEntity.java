@@ -1,9 +1,10 @@
-package com.zenika.hibernate.infrastructure.repository.model;
+package com.zenika.hibernate.infrastructure.repository.configuration.enver;
 
-import com.zenika.hibernate.infrastructure.repository.configuration.CustomRevisionEntityListener;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.envers.RevisionEntity;
 import org.hibernate.envers.RevisionNumber;
 import org.hibernate.envers.RevisionTimestamp;
@@ -12,6 +13,8 @@ import java.util.Date;
 
 @Getter
 @Setter
+@EqualsAndHashCode
+@ToString
 @Entity
 @Table(name = "revision_info")
 @RevisionEntity(CustomRevisionEntityListener.class)
