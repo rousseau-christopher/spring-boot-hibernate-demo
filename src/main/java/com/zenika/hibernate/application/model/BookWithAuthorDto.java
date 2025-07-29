@@ -6,5 +6,6 @@ public record BookWithAuthorDto(
         String isbn,
         String summary,
         Float note,
+        AuditMetaDataDto auditMetaData,
         AuthorDto author
 ) {}

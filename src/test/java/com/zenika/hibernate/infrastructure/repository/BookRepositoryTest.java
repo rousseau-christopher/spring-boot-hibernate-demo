@@ -60,8 +60,8 @@ class BookRepositoryTest extends AbstractSpringBootTest {
         assertThat(revisionDto.revisionType()).isEqualTo(RevisionMetadata.RevisionType.INSERT);
         assertThat(revisionDto.revisionDate()).isCloseTo(Instant.now(), within(Duration.ofSeconds(1)));
 
-        assertThat(revisionDto.book().auditMetaData().createdDate()).isCloseTo(Instant.now(), within(Duration.ofSeconds(1)));
-        assertThat(revisionDto.book().auditMetaData().modifiedDate()).isCloseTo(Instant.now(), within(Duration.ofSeconds(1)));
-        assertThat(revisionDto.book().auditMetaData().lastModifiedBy()).isEqualTo("TODO: Current username");
+        assertThat(revisionDto.item().auditMetaData().createdDate()).isCloseTo(Instant.now(), within(Duration.ofSeconds(1)));
+        assertThat(revisionDto.item().auditMetaData().modifiedDate()).isCloseTo(Instant.now(), within(Duration.ofSeconds(1)));
+        assertThat(revisionDto.item().auditMetaData().lastModifiedBy()).isEqualTo("TODO: Current username");
     }
 }

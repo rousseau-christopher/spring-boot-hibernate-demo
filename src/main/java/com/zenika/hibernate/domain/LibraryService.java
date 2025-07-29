@@ -7,13 +7,14 @@ import com.zenika.hibernate.domain.mapper.BookMapper;
 import com.zenika.hibernate.infrastructure.repository.AuthorRepository;
 import com.zenika.hibernate.infrastructure.repository.BookEagerRepository;
 import com.zenika.hibernate.infrastructure.repository.BookRepository;
+import com.zenika.hibernate.infrastructure.repository.configuration.enver.CustomRevisionEntity;
 import com.zenika.hibernate.infrastructure.repository.model.AuthorEntity;
 import com.zenika.hibernate.infrastructure.repository.model.BookEntity;
-import com.zenika.hibernate.infrastructure.repository.configuration.enver.CustomRevisionEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.history.RevisionMetadata;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +39,6 @@ public class LibraryService {
                 .map(authorMapper::authorEntityToDto)
                 .orElseThrow(authorNotFoundException(id));
     }
-
 
 
     public List<AuthorDto> getAuthors() {
@@ -78,11 +78,10 @@ public class LibraryService {
     }
 
 
-
     /*
      * This method creates 2 queries :
      *
-     * First query to get the book
+     * First query to get the item
      * Second query to update the note
      */
     @Transactional
@@ -101,10 +100,14 @@ public class LibraryService {
      */
     @Transactional
     public void updateNoteUsingQuery(Long id, Float value) {
-        bookRepository.updateNote(id, value);
+        int nbLigneUpdated = bookRepository.updateNote(id, value);
+        if (nbLigneUpdated == 0) {
+            throw bookNotFoundException(id).get();
+        }
     }
 
     private final Random random = new Random();
+
     /**
      * This method will do a batch update of the books
      */
@@ -149,21 +152,41 @@ public class LibraryService {
 
     public List<RevisionDto> listBookRevision(Long bookId) {
         return bookRepository.findRevisions(bookId).stream()
-                .map(revision -> {
-                    String username = "Unknown";
-                            if (revision.getMetadata().getDelegate() instanceof CustomRevisionEntity customRevisionEntity) {
-                                username = customRevisionEntity.getUsername();
-                            }
-
-                            return new RevisionDto(
-                                    revision.getMetadata().getRequiredRevisionNumber(),
-                                    revision.getMetadata().getRequiredRevisionInstant(),
-                                    revision.getMetadata().getRevisionType(),
-                                    username,
-                                    bookMapper.bookEntityToDto(revision.getEntity())
-                            );
-                        }
+                .map(revision -> new RevisionDto(
+                                revision.getMetadata().getRequiredRevisionNumber(),
+                                revision.getMetadata().getRequiredRevisionInstant(),
+                                revision.getMetadata().getRevisionType(),
+                                getRevisionUsername(revision.getMetadata()),
+                                bookMapper.bookEntityToDto(revision.getEntity())
+                        )
                 )
                 .toList();
+    }
+
+    public List<RevisionDto> listAuthorRevision(Long authorId) {
+        return authorRepository.findRevisions(authorId).stream()
+                .map(revision -> new RevisionDto(
+                                revision.getMetadata().getRequiredRevisionNumber(),
+                                revision.getMetadata().getRequiredRevisionInstant(),
+                                revision.getMetadata().getRevisionType(),
+                                getRevisionUsername(revision.getMetadata()),
+                                authorMapper.authorEntityToDto(revision.getEntity())
+                        )
+                )
+                .toList();
+    }
+
+    private static String getRevisionUsername(RevisionMetadata<Long> revision) {
+        String username = "Unknown";
+        if (revision.getDelegate() instanceof CustomRevisionEntity customRevisionEntity) {
+            username = customRevisionEntity.getUsername();
+        }
+        return username;
+    }
+
+    @Transactional
+    public void addAuthor(NewAuthorDto authorDto) {
+        AuthorEntity authorEntity = authorMapper.authorDtoToEntity(authorDto);
+        authorRepository.save(authorEntity);
     }
 }

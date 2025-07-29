@@ -58,9 +58,15 @@ class LibraryControllerTest extends AbstractSpringBootTest {
                 .isStrictlyEqualTo(
                         """
                                 {
-                                  "id": 1,
-                                  "lastname": "Tolkien",
-                                  "firstname": "JRR"
+                                  "id" : 1,
+                                  "firstname" : "JRR",
+                                  "lastname" : "Tolkien",
+                                  "address" : null,
+                                  "auditMetaData" : {
+                                    "createdDate" : "2025-07-25T10:00:00Z",
+                                    "modifiedDate" : "2025-07-25T10:00:00Z",
+                                    "lastModifiedBy" : null
+                                  }
                                 }
                                 """
                 );
@@ -130,15 +136,30 @@ class LibraryControllerTest extends AbstractSpringBootTest {
                 .bodyJson()
                 .isStrictlyEqualTo(
                         """
-                                [ {
-                                  "id" : 1,
-                                  "firstname" : "JRR",
-                                  "lastname" : "Tolkien"
-                                }, {
-                                  "id" : 2,
-                                  "firstname" : "Robert C.",
-                                  "lastname" : "Martin"
-                                } ]
+                                [
+                                  {
+                                    "id": 1,
+                                    "firstname": "JRR",
+                                    "lastname": "Tolkien",
+                                    "address": null,
+                                    "auditMetaData": {
+                                      "createdDate": "2025-07-25T10:00:00Z",
+                                      "modifiedDate": "2025-07-25T10:00:00Z",
+                                      "lastModifiedBy": null
+                                    }
+                                  },
+                                  {
+                                    "id": 2,
+                                    "firstname": "Robert C.",
+                                    "lastname": "Martin",
+                                    "address": null,
+                                    "auditMetaData": {
+                                      "createdDate": "2025-07-25T10:00:00Z",
+                                      "modifiedDate": "2025-07-25T10:00:00Z",
+                                      "lastModifiedBy": null
+                                    }
+                                  }
+                                ] \s
                                 """
                 );
 
@@ -164,14 +185,16 @@ class LibraryControllerTest extends AbstractSpringBootTest {
                 .isStrictlyEqualTo(
                         """
                                 {
-                                  "id" : 1,
-                                  "isbn" : "978-2070612888",
-                                  "label":"La Communauté de l'Anneau",
-                                  "summary" : "Aux temps reculés qu'évoque le récit, la Terre est peuplée d'innombrables créatures étranges. Les Hobbits, apparentés à l'Homme, mais proches également des Elfes et des Nains, vivent en paix au nord-ouest de l'Ancien Monde, dans la Comté. Paix précaire et menacée, cependant, depuis que Bilbon Sacquet a dérobé au monstre Gollum l'anneau de Puissance jadis forgé par Sauron de Mordor. Car cet anneau est doté d'un pouvoir immense et maléfique. Il permet à son détenteur de se rendre invisible et lui confère une autorité sans limites sur les possesseurs des autres anneaux. Bref, il fait de lui le Maître du Monde. C'est pourquoi Sauron s'est juré de reconquérir l'anneau par tous les moyens. Déjà ses Cavaliers Noirs rôdent aux frontières de la Comté.",
-                                  "note" : null,
-                                  "createdDate" : "2025-07-25T10:00:00Z",
-                                  "modifiedDate" : "2025-07-25T10:00:00Z",
-                                  "lastModifiedBy" : null
+                                  "id": 1,
+                                  "label": "La Communauté de l'Anneau",
+                                  "isbn": "978-2070612888",
+                                  "summary": "Aux temps reculés qu'évoque le récit, la Terre est peuplée d'innombrables créatures étranges. Les Hobbits, apparentés à l'Homme, mais proches également des Elfes et des Nains, vivent en paix au nord-ouest de l'Ancien Monde, dans la Comté. Paix précaire et menacée, cependant, depuis que Bilbon Sacquet a dérobé au monstre Gollum l'anneau de Puissance jadis forgé par Sauron de Mordor. Car cet anneau est doté d'un pouvoir immense et maléfique. Il permet à son détenteur de se rendre invisible et lui confère une autorité sans limites sur les possesseurs des autres anneaux. Bref, il fait de lui le Maître du Monde. C'est pourquoi Sauron s'est juré de reconquérir l'anneau par tous les moyens. Déjà ses Cavaliers Noirs rôdent aux frontières de la Comté.",
+                                  "note": null,
+                                  "auditMetaData": {
+                                    "createdDate": "2025-07-25T10:00:00Z",
+                                    "modifiedDate": "2025-07-25T10:00:00Z",
+                                    "lastModifiedBy": null
+                                  }
                                 }
                                 """
                 );
@@ -200,13 +223,24 @@ class LibraryControllerTest extends AbstractSpringBootTest {
                                   "label" : "La Communauté de l'Anneau",
                                   "isbn" : "978-2070612888",
                                   "summary" : "Aux temps reculés qu'évoque le récit, la Terre est peuplée d'innombrables créatures étranges. Les Hobbits, apparentés à l'Homme, mais proches également des Elfes et des Nains, vivent en paix au nord-ouest de l'Ancien Monde, dans la Comté. Paix précaire et menacée, cependant, depuis que Bilbon Sacquet a dérobé au monstre Gollum l'anneau de Puissance jadis forgé par Sauron de Mordor. Car cet anneau est doté d'un pouvoir immense et maléfique. Il permet à son détenteur de se rendre invisible et lui confère une autorité sans limites sur les possesseurs des autres anneaux. Bref, il fait de lui le Maître du Monde. C'est pourquoi Sauron s'est juré de reconquérir l'anneau par tous les moyens. Déjà ses Cavaliers Noirs rôdent aux frontières de la Comté.",
-                                  "note": null,
+                                  "note" : null,
+                                  "auditMetaData" : {
+                                      "createdDate" : "2025-07-25T10:00:00Z",
+                                      "modifiedDate" : "2025-07-25T10:00:00Z",
+                                      "lastModifiedBy" : null
+                                    },
                                   "author" : {
-                                      "id" : 1,
-                                      "firstname" : "JRR",
-                                      "lastname" : "Tolkien"
+                                    "id" : 1,
+                                    "firstname" : "JRR",
+                                    "lastname" : "Tolkien",
+                                    "address" : null,
+                                    "auditMetaData" : {
+                                      "createdDate" : "2025-07-25T10:00:00Z",
+                                      "modifiedDate" : "2025-07-25T10:00:00Z",
+                                      "lastModifiedBy" : null
                                     }
-                                }
+                                  }
+                                } \s
                                 """
                 );
         assertSelectQueryCount(1);

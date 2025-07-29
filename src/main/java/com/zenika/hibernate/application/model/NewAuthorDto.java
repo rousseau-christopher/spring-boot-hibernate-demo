@@ -2,10 +2,8 @@ package com.zenika.hibernate.application.model;
 
 import com.zenika.hibernate.infrastructure.repository.model.AddressJson;
 
-public record AuthorDto (
-        Long id,
+public record NewAuthorDto(
         String firstname,
         String lastname,
-        AddressJson address,
-        AuditMetaDataDto auditMetaData
-)  implements AuditMetaDataItem{}
+        AddressJson address
+) {}

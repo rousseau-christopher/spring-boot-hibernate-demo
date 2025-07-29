@@ -1,9 +1,11 @@
 package com.zenika.hibernate.infrastructure.repository.model;
 
+import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 
 import java.util.List;
@@ -29,6 +31,10 @@ public class AuthorEntity extends AbstractAuditEntity{
 
         private String firstname;
         private String lastname;
+
+        @Type(JsonBinaryType.class)
+        @Column(columnDefinition = "jsonb")
+        private AddressJson address;
 
         @OneToMany(mappedBy = "author", fetch = LAZY, cascade = CascadeType.REMOVE)
         private List<BookEntity> book;

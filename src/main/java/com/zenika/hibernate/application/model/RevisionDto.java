@@ -9,6 +9,6 @@ public record RevisionDto(
         Instant revisionDate,
         RevisionType revisionType,
         String username,
-        BookDto book
+        AuditMetaDataItem item
 ) {
 }

@@ -46,8 +46,18 @@ When we have multiple line updates, it's better to regroup them. This will let t
 ## JSON column in postgresql with jpa
 postgres can store json in 2 format : json and jsonb
 jsonb seams better; https://www.dbvis.com/thetable/json-vs-jsonb-in-postgresql-a-complete-comparison/
-- https://www.baeldung.com/spring-boot-jpa-storing-postgresql-jsonb
 
+Adding a library to handle json type : https://www.baeldung.com/hibernate-types-library
+
+Hibernate and Jpa with one annotation: https://vladmihalcea.com/how-to-map-json-objects-using-generic-hibernate-types/
+
+Other doc convert by hand: https://www.baeldung.com/spring-boot-jpa-storing-postgresql-jsonb
+
+- https://vladmihalcea.com/hibernate-types-hypersistence-utils/
+- https://github.com/vladmihalcea/hypersistence-utils
+
+
+## Indexing json properties
 
 ## Steaming
 There is a lot of problem then streaming over Api:

@@ -21,6 +21,12 @@ import java.util.stream.Stream;
 public class LibraryController {
     private final LibraryService libraryService;
 
+    @PostMapping("author")
+    void addAuthor(@RequestBody NewAuthorDto authorDto) {
+        log.info("Adding Author: {}", authorDto);
+        libraryService.addAuthor(authorDto);
+    }
+
     @GetMapping("author")
     List<AuthorDto> getAuthors() {
         log.info("getAuthors");
@@ -64,7 +70,7 @@ public class LibraryController {
 
     @PutMapping("book/{id}/note")
     void updateBookNote(@PathVariable Long id, @RequestBody NoteDto note) {
-        log.info("Update book {} with note {}", id, note);
+        log.info("Update item {} with note {}", id, note);
         libraryService.updateNote(id, note.value());
     }
 
@@ -91,5 +97,12 @@ public class LibraryController {
         log.info("Auditing Book {}", bookId);
 
         return libraryService.listBookRevision(bookId);
+    }
+
+    @GetMapping("/author/{authorId}/audit")
+    List<RevisionDto> auditAuthor(@PathVariable Long authorId) {
+        log.info("Auditing Author {}", authorId);
+
+        return libraryService.listAuthorRevision(authorId);
     }
 }

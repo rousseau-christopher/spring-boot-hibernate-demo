@@ -33,6 +33,9 @@ public interface BookRepository extends
     )
     Optional<BookEntity> retrieveABookWithHisAuthor(Long bookId);
 
+    /*
+        This way of updating will bypass the audit mechanism !!! and the optimistic locking version !!!!
+     */
     @Modifying
     @Query("UPDATE BookEntity book SET book.note = :value WHERE book.id = :id")
     int updateNote(Long id, Float value);
