@@ -55,11 +55,6 @@
             <scope>runtime</scope>
             <!-- version are managed by spring boot parent -->
         </dependency>
-        <dependency>
-            <groupId>io.hypersistence</groupId>
-            <artifactId>hypersistence-utils-hibernate-63</artifactId>
-            <version>3.10.3</version>
-        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -75,7 +70,6 @@
         <dependency>
             <groupId>org.jspecify</groupId>
             <artifactId>jspecify</artifactId>
-            <version>1.0.0</version>
         </dependency>
 
         <dependency>
@@ -106,10 +100,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>net.ttddyy</groupId>
-            <artifactId>datasource-proxy</artifactId>
+            <groupId>com.github.gavlyukovskiy</groupId>
+            <artifactId>datasource-proxy-spring-boot-starter</artifactId>
+            <version>1.12.0</version>
             <scope>test</scope>
-            <version>1.10.1</version>
         </dependency>
     </dependencies>
 

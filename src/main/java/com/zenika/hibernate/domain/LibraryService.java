@@ -91,7 +91,7 @@ public class LibraryService {
                 .orElseThrow(bookNotFoundException(id));
 
         bookEntity.setNote(value);
-        bookRepository.save(bookEntity);
+        bookRepository.save(bookEntity); // not needed : Hibernate dirty checking will save it !
     }
 
     /*

@@ -5,9 +5,17 @@ spring:
         jdbc:
           batch_size: 3
 
+# see https://github.com/gavlyukovskiy/spring-boot-data-source-decorator
+decorator:
+  datasource:
+    datasource-proxy:
+      count-query: true
+      format-sql: true
+
+
 logging:
   level:
-    SQL: INFO
+    net.ttddyy.dsproxy.listener: INFO
 
     # log transaction
     org.springframework.orm.jpa.JpaTransactionManager: debug
@@ -23,3 +31,5 @@ logging:
 
     # request filter
     org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+
+    org.springframework.test.context.cache: DEBUG

@@ -8,12 +8,8 @@ import net.ttddyy.dsproxy.QueryCountHolder;
 public class QueryCountUtil {
     private QueryCountUtil() {}
 
-    public static void resetCounter() {
-        QueryCountHolder.clear();
-    }
-
     public static QueryCount getQueryCount() {
-        return QueryCountHolder.get("MyDS");
+        return QueryCountHolder.get("dataSource");
     }
 
     public static void logQueryCount() {

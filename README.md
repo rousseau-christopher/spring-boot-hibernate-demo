@@ -4,7 +4,7 @@ This project is a demo project to test different pattern with Spring boot data a
 ## debug SQL
 To understand what happens, it's better to have all sql and transaction in logs.
 - https://www.baeldung.com/sql-logging-spring-boot
-- https://github.com/jdbc-observations/datasource-proxy?tab=readme-ov-file
+- https://github.com/gavlyukovskiy/spring-boot-data-source-decorator
 - In Intellij, there is also a spring debugger plugin : https://www.youtube.com/watch?v=K2tYAHG2XJ8&t=1324s
 
 ## Open Session in View

@@ -6,16 +6,17 @@ import com.zenika.hibernate.AbstractSpringBootTest;
 import com.zenika.hibernate.infrastructure.repository.AuthorRepository;
 import com.zenika.hibernate.infrastructure.repository.BookRepository;
 import com.zenika.hibernate.infrastructure.repository.model.BookEntity;
-import jakarta.transaction.Transactional;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
 
 import static com.zenika.hibernate.querycount.AssertQuery.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.BDDAssertions.then;
 
 
 /**
@@ -25,7 +26,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Default : Hibernate will use the cached entity in test. This can lead to some bugs
  */
 @Slf4j
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class LibraryControllerTest extends AbstractSpringBootTest {
 
     @Autowired
@@ -39,7 +39,6 @@ class LibraryControllerTest extends AbstractSpringBootTest {
 
     @Test
     @SneakyThrows
-    @Order(1)
     void shouldGetAuthorTolkien() {
         // GIVEN
 
@@ -77,9 +76,6 @@ class LibraryControllerTest extends AbstractSpringBootTest {
     }
 
     @Test
-    @Order(2)
-    @Transactional()
-        // With this the update will be rollback after the test.
     void shouldDeleteAuthor() {
         // GIVEN
 
@@ -89,7 +85,7 @@ class LibraryControllerTest extends AbstractSpringBootTest {
                 .exchange();
 
         // THEN
-        assertThat(exchange)
+        then(exchange)
                 .hasStatusOk();
         assertThat(authorRepository.findById(TOLKIEN_ID)).isEmpty();
     }

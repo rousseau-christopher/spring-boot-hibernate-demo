@@ -2,6 +2,7 @@ package com.zenika.hibernate;
 
 import com.zenika.hibernate.querycount.QueryCountUtil;
 import lombok.extern.slf4j.Slf4j;
+import net.ttddyy.dsproxy.listener.SingleQueryCountHolder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,12 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlMergeMode;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
 @Slf4j
 @ActiveProfiles("it")
 @Import(TestcontainersConfiguration.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = RANDOM_PORT)
 @Sql(scripts = "/data/init.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @SqlMergeMode(SqlMergeMode.MergeMode.MERGE)
 @AutoConfigureMockMvc
@@ -29,11 +32,13 @@ public abstract class AbstractSpringBootTest {
     @Autowired
     protected MockMvcTester mockMvcTester;
 
+
+
     @BeforeEach
     void setUp() {
         log.info("setUp");
         activateSqlLogAfterInsertionOfTestData();
-        QueryCountUtil.resetCounter();
+        resetQueryCount();
     }
 
     @AfterEach
@@ -43,15 +48,23 @@ public abstract class AbstractSpringBootTest {
         QueryCountUtil.logQueryCount();
     }
 
+    @Autowired
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    private SingleQueryCountHolder singleQueryCountHolder;
+    private void resetQueryCount() {
+        singleQueryCountHolder.clear();
+    }
+
+    private static final String SQL_LOG_NAME = "net.ttddyy.dsproxy.listener.logging";
     /**
      * We activate the log after we initialize the data with the "init.sql" script or we got tons of useless logs
      */
-    private static void activateSqlLogAfterInsertionOfTestData() {
-        LoggingSystem.get(LoggingSystem.class.getClassLoader()).setLogLevel("SQL", LogLevel.DEBUG);
+    private void activateSqlLogAfterInsertionOfTestData() {
+        LoggingSystem.get(LoggingSystem.class.getClassLoader()).setLogLevel(SQL_LOG_NAME, LogLevel.DEBUG);
     }
 
-    private static void deactivateSqlLogAfterTest() {
-        LoggingSystem.get(LoggingSystem.class.getClassLoader()).setLogLevel("SQL", LogLevel.INFO);
+    private void deactivateSqlLogAfterTest() {
+        LoggingSystem.get(LoggingSystem.class.getClassLoader()).setLogLevel(SQL_LOG_NAME, LogLevel.INFO);
     }
 
 }

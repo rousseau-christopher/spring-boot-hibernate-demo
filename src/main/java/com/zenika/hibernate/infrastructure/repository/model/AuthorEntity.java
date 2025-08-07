@@ -1,14 +1,14 @@
 package com.zenika.hibernate.infrastructure.repository.model;
 
-import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.NotAudited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class AuthorEntity extends AbstractAuditEntity{
         private String firstname;
         private String lastname;
 
-        @Type(JsonBinaryType.class)
+        @JdbcTypeCode(SqlTypes.JSON)
         @Column(columnDefinition = "jsonb")
         private AddressJson address;
 
