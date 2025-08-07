@@ -18,15 +18,21 @@ public class QueryCountUtil {
 
     public static void logQueryCount() {
         QueryCount queryCount = getQueryCount();
-        log.info("""
+        if (queryCount != null) {
+            log.info("""
                 Query stats:
+                Nb Select {}
                 Nb Insert {}
                 Nb Update {}
                 Nb Delete {}
                 """,
-                queryCount.getSelect(),
-                queryCount.getUpdate(),
-                queryCount.getDelete()
-        );
+                    queryCount.getSelect(),
+                    queryCount.getInsert(),
+                    queryCount.getUpdate(),
+                    queryCount.getDelete()
+            );
+        } else {
+            log.info("No query was executed");
+        }
     }
 }

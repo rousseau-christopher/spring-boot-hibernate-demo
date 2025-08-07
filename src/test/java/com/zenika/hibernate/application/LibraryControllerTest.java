@@ -14,8 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
 
-import static com.zenika.hibernate.querycount.AssertQuery.assertSelectQueryCount;
-import static com.zenika.hibernate.querycount.AssertQuery.assertUpdateQueryCount;
+import static com.zenika.hibernate.querycount.AssertQuery.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -23,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * The order is used only to understant how the rollback of transaction work
  * You must not use it like this in test
  * if you add @transaction to a method, the transaction will be rollback at the end of the test
- *  Default : Hibernate will use the cached entity in test. This can lead to some bugs
+ * Default : Hibernate will use the cached entity in test. This can lead to some bugs
  */
 @Slf4j
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -58,14 +57,18 @@ class LibraryControllerTest extends AbstractSpringBootTest {
                 .isStrictlyEqualTo(
                         """
                                 {
-                                  "id" : 1,
-                                  "firstname" : "JRR",
-                                  "lastname" : "Tolkien",
-                                  "address" : null,
-                                  "auditMetaData" : {
-                                    "createdDate" : "2025-07-25T10:00:00Z",
-                                    "modifiedDate" : "2025-07-25T10:00:00Z",
-                                    "lastModifiedBy" : null
+                                  "id": 1,
+                                  "firstname": "JRR",
+                                  "lastname": "Tolkien",
+                                  "address": {
+                                    "street": null,
+                                    "city": null,
+                                    "zipCode": null
+                                  },
+                                  "auditMetaData": {
+                                    "createdDate": "2025-07-25T10:00:00Z",
+                                    "modifiedDate": "2025-07-25T10:00:00Z",
+                                    "lastModifiedBy": "Karl"
                                   }
                                 }
                                 """
@@ -75,7 +78,8 @@ class LibraryControllerTest extends AbstractSpringBootTest {
 
     @Test
     @Order(2)
-    @Transactional() // With this the update will be rollback after the test.
+    @Transactional()
+        // With this the update will be rollback after the test.
     void shouldDeleteAuthor() {
         // GIVEN
 
@@ -141,11 +145,15 @@ class LibraryControllerTest extends AbstractSpringBootTest {
                                     "id": 1,
                                     "firstname": "JRR",
                                     "lastname": "Tolkien",
-                                    "address": null,
+                                    "address": {
+                                    "street": null,
+                                    "city": null,
+                                    "zipCode": null
+                                  },
                                     "auditMetaData": {
                                       "createdDate": "2025-07-25T10:00:00Z",
                                       "modifiedDate": "2025-07-25T10:00:00Z",
-                                      "lastModifiedBy": null
+                                      "lastModifiedBy": "Karl"
                                     }
                                   },
                                   {
@@ -233,11 +241,15 @@ class LibraryControllerTest extends AbstractSpringBootTest {
                                     "id" : 1,
                                     "firstname" : "JRR",
                                     "lastname" : "Tolkien",
-                                    "address" : null,
+                                    "address" : {
+                                        "street": null,
+                                        "city": null,
+                                        "zipCode": null
+                                      },
                                     "auditMetaData" : {
                                       "createdDate" : "2025-07-25T10:00:00Z",
                                       "modifiedDate" : "2025-07-25T10:00:00Z",
-                                      "lastModifiedBy" : null
+                                      "lastModifiedBy" : "Karl"
                                     }
                                   }
                                 } \s
@@ -315,6 +327,32 @@ class LibraryControllerTest extends AbstractSpringBootTest {
                 .hasStatusOk();
 
 
+    }
+
+    @Test
+    void shouldAddBook() {
+        // GIVEN
+        String newbook = """
+                 {
+                     "label" : "my book",
+                     "isbn" : "123",
+                     "summary" : "new summary",
+                     "note" : 2.5
+                 }
+                """;
+
+        // WHEN
+        MvcTestResult exchange = mockMvcTester.post()
+                .uri("/library/author/{id}/book", TOLKIEN_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(newbook)
+                .exchange();
+
+        // THEN
+        assertThat(exchange)
+                .hasStatusOk();
+        assertInsertQueryCount(3); // one for the book, 2 for audit
+        assertSelectQueryCount(2); // one for sequence book nextVal, one for revision sequence nextVal()
     }
 
 }

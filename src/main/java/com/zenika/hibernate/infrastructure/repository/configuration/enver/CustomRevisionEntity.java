@@ -9,7 +9,7 @@ import org.hibernate.envers.RevisionEntity;
 import org.hibernate.envers.RevisionNumber;
 import org.hibernate.envers.RevisionTimestamp;
 
-import java.util.Date;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -30,7 +30,7 @@ public class CustomRevisionEntity {
 
     @RevisionTimestamp
     @Column(columnDefinition = "TIMESTAMP WITH TIME ZONE", nullable = false, updatable = false)
-    private Date timestamp;
+    private Instant timestamp;
 
     private String username;
 }

@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 import org.jspecify.annotations.NonNull;
 
 import java.util.Objects;
@@ -17,7 +18,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "book")
 @ToString(exclude = "author")
-@Audited
+@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED) // We don't want the author to be audited when we update a book !!!
 public class BookEntity extends AbstractAuditEntity{
     private static final String BOOK_SEQUENCE = "book_seq";
 

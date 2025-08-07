@@ -55,11 +55,14 @@ Other doc convert by hand: https://www.baeldung.com/spring-boot-jpa-storing-post
 
 - https://vladmihalcea.com/hibernate-types-hypersistence-utils/
 - https://github.com/vladmihalcea/hypersistence-utils
+- https://thorben-janssen.com/persist-postgresqls-jsonb-data-type-hibernate/
 
 
 ## Indexing json properties
+- https://www.yugabyte.com/blog/index-json-postgresql/
+  https://gist.github.com/Fabricio20/83c86ccf055c8efc359463dc8a1e895c#file-postgres-md
 
-## Steaming
+## Streaming
 There is a lot of problem then streaming over Api:
 - the stream will be close by the transaction manager before sended to the api
 - Entities will stay in memory because of the hibernate cache
@@ -74,11 +77,12 @@ There is a lot of problem then streaming over Api:
 - https://thorben-janssen.com/hibernate-envers-query-data-audit-log/
 - https://vladmihalcea.com/spring-data-envers/
 - https://docs.jboss.org/hibernate/orm/current/userguide/html_single/Hibernate_User_Guide.html#envers-revisionlog
+- https://www.delia.tech/delia-academy-articles/hibernate-envers-la-librairie-java-pour-le-suivi-des-actions-en-bdd
 
 There are limit with hibernate enver. Only action on managed entity are audited. Any modification done with @query @Modifying are not audited !
 
 ## Transaction
-With hibernate it's best to always have a transaction then accessing database. You can set a readonly transaction then not changing database. It can improve speed. And it will cancel all database modification if they are not inside a write transaction !
+With hibernate it's best to always have a transaction then accessing database. You can set a readonly transaction when not changing database. It can improve speed. And it will cancel all database modifications if they are not inside a write transaction!
 
 
 ## Locking
@@ -86,4 +90,8 @@ With hibernate it's best to always have a transaction then accessing database. Y
 - https://www.baeldung.com/jpa-optimistic-locking
 - https://medium.com/jpa-java-persistence-api-guide/optimistic-vs-pessimistic-locking-in-spring-data-69ae32402fe3
 - https://discourse.hibernate.org/t/envers-version-field-is-nul/2113
+
+## GIN index
+- https://pganalyze.com/blog/gin-index
+
 ## Test

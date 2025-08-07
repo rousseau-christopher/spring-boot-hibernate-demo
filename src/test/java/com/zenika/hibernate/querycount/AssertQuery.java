@@ -17,4 +17,9 @@ public class AssertQuery {
         QueryCount queryCount = QueryCountUtil.getQueryCount();
         assertThat(queryCount.getUpdate()).withFailMessage("Must execute only %s update query. But found %s", expected, queryCount.getUpdate()).isEqualTo(expected);
     }
+
+    public static void assertInsertQueryCount(long expected) {
+        QueryCount queryCount = QueryCountUtil.getQueryCount();
+        assertThat(queryCount.getInsert()).withFailMessage("Must execute only %s insert query. But found %s", expected, queryCount.getInsert()).isEqualTo(expected);
+    }
 }

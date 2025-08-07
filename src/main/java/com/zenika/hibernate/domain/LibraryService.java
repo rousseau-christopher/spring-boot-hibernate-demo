@@ -132,8 +132,7 @@ public class LibraryService {
 
     @Transactional
     public long addBook(long authorId, NewBookDto bookDto) {
-        AuthorEntity authorEntity = authorRepository.findById(authorId)
-                .orElseThrow(authorNotFoundException(authorId));
+        AuthorEntity authorEntity = authorRepository.getReferenceById(authorId);
 
         BookEntity bookEntity = bookMapper.bookDtoToEntity(bookDto);
         bookEntity.setAuthor(authorEntity);

@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import java.util.List;
 
@@ -17,7 +19,7 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @Table(name = "author")
 @ToString(exclude = "book")
-@Audited
+@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED) // we don't want the book audited when we update an author
 public class AuthorEntity extends AbstractAuditEntity{
         private static final String AUTHOR_SEQUENCE = "author_seq";
 
@@ -37,6 +39,7 @@ public class AuthorEntity extends AbstractAuditEntity{
         private AddressJson address;
 
         @OneToMany(mappedBy = "author", fetch = LAZY, cascade = CascadeType.REMOVE)
+        @NotAudited
         private List<BookEntity> book;
 
         /*
