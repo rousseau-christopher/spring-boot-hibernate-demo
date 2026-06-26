@@ -1,10 +1,14 @@
 package com.zenika.hibernate.infrastructure.repository.model;
 
-import lombok.Data;
 
-@Data
-public class AddressJson {
-    private String street;
-    private String city;
-    private String zipCode;
+public record AddressJson (
+    String street,
+    String city,
+    String zipCode,
+    Country country
+) {
+    public record Country(
+            String code,
+            String name
+    ) {}
 }

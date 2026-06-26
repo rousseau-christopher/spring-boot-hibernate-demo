@@ -29,6 +29,9 @@ Pagination and Sorting model can be managed by spring MVC and correctly shown in
 - https://bootify.io/spring-boot/pagination-in-spring-boot-rest-api.html
 - https://springdoc.org/faq.html#how-can-i-map-pageable-spring-date-commons-object-to-correct-url-parameter-in-swagger-ui
 
+## Specifications
+Specification is a clean way of create complexe Criteria Query (ex multi properties search)
+- https://docs.spring.io/spring-data/jpa/reference/jpa/specifications.html
 
 ## Update using @Query
 update a column with Jpa can be inefficient. Lot of time I see code that read the object from the repository, change fields and save.
@@ -47,15 +50,9 @@ When we have multiple line updates, it's better to regroup them. This will let t
 postgres can store json in 2 format : json and jsonb
 jsonb seams better; https://www.dbvis.com/thetable/json-vs-jsonb-in-postgresql-a-complete-comparison/
 
-Adding a library to handle json type : https://www.baeldung.com/hibernate-types-library
+Json in supported natively in hibernate 6+ :https://thorben-janssen.com/persist-postgresqls-jsonb-data-type-hibernate/
 
-Hibernate and Jpa with one annotation: https://vladmihalcea.com/how-to-map-json-objects-using-generic-hibernate-types/
-
-Other doc convert by hand: https://www.baeldung.com/spring-boot-jpa-storing-postgresql-jsonb
-
-- https://vladmihalcea.com/hibernate-types-hypersistence-utils/
-- https://github.com/vladmihalcea/hypersistence-utils
-- https://thorben-janssen.com/persist-postgresqls-jsonb-data-type-hibernate/
+How to query Json column: https://www.tigerdata.com/learn/how-to-query-json-metadata-in-postgresql
 
 
 ## Indexing json properties

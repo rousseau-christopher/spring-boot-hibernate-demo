@@ -2,8 +2,12 @@ TRUNCATE TABLE book, author;
 ALTER SEQUENCE author_seq RESTART WITH 1;
 ALTER SEQUENCE public.book_seq RESTART WITH 1;
 
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+CREATE INDEX IF NOT EXISTS book_label_fuzzy_search_idx on book
+    using gist(label gist_trgm_ops(siglen=256));
+
 INSERT INTO author (id, version, firstname, lastname, address, created_date, modified_date, last_modified_by)
-  VALUES ( nextval('author_seq'), 1, 'JRR', 'Tolkien', '{"street":null,"city":null,"zipCode":null}', '2025-07-25 10:00:00Z', '2025-07-25 10:00:00Z', 'Karl');
+  VALUES ( nextval('author_seq'), 1, 'JRR', 'Tolkien', '{"street": "petite maison derriere la colline","city":"Comté","zipCode":"00 001", "country" : { "code":"TM", "name":"Terre du milieu"}}', '2025-07-25 10:00:00Z', '2025-07-25 10:00:00Z', 'Karl');
 
 INSERT INTO book(id, version, label, summary, isbn, author_id, created_date, modified_date)
   VALUES (nextval('book_seq'), 1, 'La Communauté de l''Anneau', 'Aux temps reculés qu''évoque le récit, la Terre est peuplée d''innombrables créatures étranges. Les Hobbits, apparentés à l''Homme, mais proches également des Elfes et des Nains, vivent en paix au nord-ouest de l''Ancien Monde, dans la Comté. Paix précaire et menacée, cependant, depuis que Bilbon Sacquet a dérobé au monstre Gollum l''anneau de Puissance jadis forgé par Sauron de Mordor. Car cet anneau est doté d''un pouvoir immense et maléfique. Il permet à son détenteur de se rendre invisible et lui confère une autorité sans limites sur les possesseurs des autres anneaux. Bref, il fait de lui le Maître du Monde. C''est pourquoi Sauron s''est juré de reconquérir l''anneau par tous les moyens. Déjà ses Cavaliers Noirs rôdent aux frontières de la Comté.', '978-2070612888', 1, '2025-07-25 10:00:00Z', '2025-07-25 10:00:00Z');
@@ -14,8 +18,8 @@ INSERT INTO book(id, version, label, summary, isbn, author_id, created_date, mod
 
 
 
-INSERT INTO author (id, version, firstname, lastname, created_date, modified_date)
-  VALUES ( nextval('author_seq'),1, 'Robert C.', 'Martin', '2025-07-25 10:00:00Z', '2025-07-25 10:00:00Z');
+INSERT INTO author (id, version, firstname, lastname, address, created_date, modified_date)
+  VALUES ( nextval('author_seq'),1, 'Robert C.', 'Martin', '{"street": "somewhere","city":"Paris","zipCode":"75 001", "country" : { "code":"FR", "name":"France"}}', '2025-07-25 10:00:00Z', '2025-07-25 10:00:00Z');
 
 INSERT INTO book(id, version, label, summary, isbn, author_id, created_date, modified_date)
   VALUES (nextval('book_seq'), 1, 'Clean Code', 'Even bad code can function. But if code isn’t clean, it can bring a development organization to its knees. Every year, countless hours and significant resources are lost because of poorly written code. But it doesn’t have to be that way.', '978-0132350884', 2, '2025-07-25 10:00:00Z', '2025-07-25 10:00:00Z');

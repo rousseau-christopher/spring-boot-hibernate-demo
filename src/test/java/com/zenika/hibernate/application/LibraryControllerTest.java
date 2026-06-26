@@ -8,7 +8,6 @@ import com.zenika.hibernate.infrastructure.repository.BookRepository;
 import com.zenika.hibernate.infrastructure.repository.model.BookEntity;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -56,18 +55,18 @@ class LibraryControllerTest extends AbstractSpringBootTest {
                 .isStrictlyEqualTo(
                         """
                                 {
-                                  "id": 1,
-                                  "firstname": "JRR",
-                                  "lastname": "Tolkien",
-                                  "address": {
-                                    "street": null,
-                                    "city": null,
-                                    "zipCode": null
+                                  "id" : 1,
+                                  "firstname" : "JRR",
+                                  "lastname" : "Tolkien",
+                                  "address" : {
+                                    "street" : "petite maison derriere la colline",
+                                    "city" : "Comté",
+                                    "zipCode" : "00 001"
                                   },
-                                  "auditMetaData": {
-                                    "createdDate": "2025-07-25T10:00:00Z",
-                                    "modifiedDate": "2025-07-25T10:00:00Z",
-                                    "lastModifiedBy": "Karl"
+                                  "auditMetaData" : {
+                                    "createdDate" : "2025-07-25T10:00:00Z",
+                                    "modifiedDate" : "2025-07-25T10:00:00Z",
+                                    "lastModifiedBy" : "Karl"
                                   }
                                 }
                                 """
@@ -101,9 +100,9 @@ class LibraryControllerTest extends AbstractSpringBootTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
-                            "value": %f
+                            "value": 8.5
                         }
-                        """.formatted(note))
+                        """)
                 .exchange();
 
         // THEN
@@ -137,33 +136,37 @@ class LibraryControllerTest extends AbstractSpringBootTest {
                 .isStrictlyEqualTo(
                         """
                                 [
-                                  {
-                                    "id": 1,
-                                    "firstname": "JRR",
-                                    "lastname": "Tolkien",
-                                    "address": {
-                                    "street": null,
-                                    "city": null,
-                                    "zipCode": null
-                                  },
-                                    "auditMetaData": {
-                                      "createdDate": "2025-07-25T10:00:00Z",
-                                      "modifiedDate": "2025-07-25T10:00:00Z",
-                                      "lastModifiedBy": "Karl"
-                                    }
-                                  },
-                                  {
-                                    "id": 2,
-                                    "firstname": "Robert C.",
-                                    "lastname": "Martin",
-                                    "address": null,
-                                    "auditMetaData": {
-                                      "createdDate": "2025-07-25T10:00:00Z",
-                                      "modifiedDate": "2025-07-25T10:00:00Z",
-                                      "lastModifiedBy": null
-                                    }
-                                  }
-                                ] \s
+                                      {
+                                        "id": 1,
+                                        "firstname": "JRR",
+                                        "lastname": "Tolkien",
+                                        "address": {
+                                          "street": "petite maison derriere la colline",
+                                          "city": "Comté",
+                                          "zipCode": "00 001"
+                                        },
+                                        "auditMetaData": {
+                                          "createdDate": "2025-07-25T10:00:00Z",
+                                          "modifiedDate": "2025-07-25T10:00:00Z",
+                                          "lastModifiedBy": "Karl"
+                                        }
+                                      },
+                                      {
+                                        "id": 2,
+                                        "firstname": "Robert C.",
+                                        "lastname": "Martin",
+                                        "address": {
+                                          "street": "somewhere",
+                                          "city": "Paris",
+                                          "zipCode": "75 001"
+                                        },
+                                        "auditMetaData": {
+                                          "createdDate": "2025-07-25T10:00:00Z",
+                                          "modifiedDate": "2025-07-25T10:00:00Z",
+                                          "lastModifiedBy": null
+                                        }
+                                      }
+                                    ]
                                 """
                 );
 
@@ -229,26 +232,26 @@ class LibraryControllerTest extends AbstractSpringBootTest {
                                   "summary" : "Aux temps reculés qu'évoque le récit, la Terre est peuplée d'innombrables créatures étranges. Les Hobbits, apparentés à l'Homme, mais proches également des Elfes et des Nains, vivent en paix au nord-ouest de l'Ancien Monde, dans la Comté. Paix précaire et menacée, cependant, depuis que Bilbon Sacquet a dérobé au monstre Gollum l'anneau de Puissance jadis forgé par Sauron de Mordor. Car cet anneau est doté d'un pouvoir immense et maléfique. Il permet à son détenteur de se rendre invisible et lui confère une autorité sans limites sur les possesseurs des autres anneaux. Bref, il fait de lui le Maître du Monde. C'est pourquoi Sauron s'est juré de reconquérir l'anneau par tous les moyens. Déjà ses Cavaliers Noirs rôdent aux frontières de la Comté.",
                                   "note" : null,
                                   "auditMetaData" : {
-                                      "createdDate" : "2025-07-25T10:00:00Z",
-                                      "modifiedDate" : "2025-07-25T10:00:00Z",
-                                      "lastModifiedBy" : null
-                                    },
+                                    "createdDate" : "2025-07-25T10:00:00Z",
+                                    "modifiedDate" : "2025-07-25T10:00:00Z",
+                                    "lastModifiedBy" : null
+                                  },
                                   "author" : {
                                     "id" : 1,
                                     "firstname" : "JRR",
                                     "lastname" : "Tolkien",
                                     "address" : {
-                                        "street": null,
-                                        "city": null,
-                                        "zipCode": null
-                                      },
+                                      "street" : "petite maison derriere la colline",
+                                      "city" : "Comté",
+                                      "zipCode" : "00 001"
+                                    },
                                     "auditMetaData" : {
                                       "createdDate" : "2025-07-25T10:00:00Z",
                                       "modifiedDate" : "2025-07-25T10:00:00Z",
                                       "lastModifiedBy" : "Karl"
                                     }
                                   }
-                                } \s
+                                }
                                 """
                 );
         assertSelectQueryCount(1);
@@ -303,26 +306,6 @@ class LibraryControllerTest extends AbstractSpringBootTest {
                 .hasStatusOk();
 
         assertUpdateQueryCount(2); // Batch size is 3
-    }
-
-    @Test
-    @SneakyThrows
-    @Disabled("cannot work the way it's implement. See controller comment")
-    void shouldGetBooksUsingStream() {
-        // GIVEN
-
-        // WHEN
-        MvcTestResult exchange = mockMvcTester.get()
-                .uri("/library/author/{id}/book", TOLKIEN_ID)
-                .exchange();
-
-        // THEN
-        logBodyAsJson(exchange.getResponse().getContentAsString());
-
-        assertThat(exchange)
-                .hasStatusOk();
-
-
     }
 
     @Test

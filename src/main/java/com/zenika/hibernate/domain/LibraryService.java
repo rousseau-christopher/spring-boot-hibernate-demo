@@ -10,18 +10,32 @@ import com.zenika.hibernate.infrastructure.repository.BookRepository;
 import com.zenika.hibernate.infrastructure.repository.configuration.enver.CustomRevisionEntity;
 import com.zenika.hibernate.infrastructure.repository.model.AuthorEntity;
 import com.zenika.hibernate.infrastructure.repository.model.BookEntity;
+import com.zenika.hibernate.infrastructure.repository.specification.BookSpecifications;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.history.RevisionMetadata;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
+
+import static com.zenika.hibernate.infrastructure.repository.configuration.CustomPostgreSqlDialect.TRIGRAM_SIMILARITY;
 
 @Slf4j
 @Service
@@ -72,7 +86,7 @@ public class LibraryService {
     }
 
     public Page<BookWithAuthorDto> all(Pageable pageable) {
-        return bookEagerRepository
+        return bookRepository
                 .findAll(pageable)
                 .map(bookMapper::bookEntityToBookWithAuthor);
     }
@@ -187,5 +201,95 @@ public class LibraryService {
     public void addAuthor(NewAuthorDto authorDto) {
         AuthorEntity authorEntity = authorMapper.authorDtoToEntity(authorDto);
         authorRepository.save(authorEntity);
+    }
+
+    public Page<BookWithAuthorDto> searchWithQuery(BookSearchRequestDto bookSearchRequest, Pageable pageable) {
+        String isbnQuery = bookSearchRequest.isbn();
+        if (StringUtils.isBlank(isbnQuery)) {
+            isbnQuery = "%";
+        }
+
+        String bookName;
+        if (StringUtils.isBlank(bookSearchRequest.bookName())) {
+            bookName = "%";
+        }  else {
+            bookName = "%" + bookSearchRequest.bookName() + "%";
+        }
+
+        return bookRepository
+                .searchBook(isbnQuery, bookName,    pageable)
+                .map(bookMapper::bookEntityToBookWithAuthor);
+    }
+
+    @PersistenceContext
+    EntityManager entityManager;
+
+    public Page<BookWithAuthorDto> searchWithCriteria(BookSearchRequestDto bookSearchRequest, Pageable pageable) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<BookEntity> cq = cb.createQuery(BookEntity.class);
+
+        Root<BookEntity> book = cq.from(BookEntity.class);
+        List<Predicate> predicates = new ArrayList<>();
+        if (bookSearchRequest.isbn() != null) {
+            predicates.add(
+                    cb.equal(book.get("isbn"), bookSearchRequest.isbn())
+            );
+        }
+        if (bookSearchRequest.bookName() != null) {
+            predicates.add(
+                    cb.isTrue(
+                            cb.function(
+                                    TRIGRAM_SIMILARITY,
+                                    Boolean.class,
+                                    cb.literal(bookSearchRequest.bookName()),
+                                    book.get("label")
+
+                            )
+                    )
+            );
+        }
+        cq.where(predicates.toArray(new Predicate[0]));
+
+        TypedQuery<BookEntity> query = entityManager.createQuery(cq)
+                .setFirstResult((int) pageable.getOffset())
+                .setMaxResults(pageable.getPageSize());
+
+        List<BookWithAuthorDto> books = query.getResultList()
+                .stream()
+                .map(bookMapper::bookEntityToBookWithAuthor)
+                .toList();
+
+        return new PageImpl<>(books, pageable, 1000);
+    }
+
+
+
+
+
+
+
+
+
+
+
+    /*
+    EntityGraph<BookEntity> entityGraph = em.createEntityGraph(BookEntity.class);
+        entityGraph.addAttributeNodes("author");
+
+        TypedQuery<BookEntity> query = em.createQuery(cq).setHint("javax.persistence.fetchgraph", entityGraph);
+     */
+
+
+
+    public Page<BookWithAuthorDto> searchWithSpecification(BookSearchRequestDto bookSearchRequest, Pageable pageable) {
+        Specification<BookEntity> specification =
+                BookSpecifications.isbnSearch(bookSearchRequest.isbn())
+                        .and(BookSpecifications.labelSearch(bookSearchRequest.bookName()))
+                        .and(BookSpecifications.authorSearch(bookSearchRequest.authorName()))
+                        .and(BookSpecifications.authorCitySearch(bookSearchRequest.city()));
+
+        return bookRepository
+                .findAll(specification, pageable)
+                .map(bookMapper::bookEntityToBookWithAuthor);
     }
 }

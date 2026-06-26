@@ -5,13 +5,17 @@ spring:
         jdbc:
           batch_size: 3
 
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hibernate_test
+    username: postgres
+    password: postgres
+
 # see https://github.com/gavlyukovskiy/spring-boot-data-source-decorator
 decorator:
   datasource:
     datasource-proxy:
       count-query: true
       format-sql: true
-
 
 logging:
   level:

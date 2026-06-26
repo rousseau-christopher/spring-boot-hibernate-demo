@@ -2,17 +2,19 @@ package com.zenika.hibernate.application;
 
 import com.zenika.hibernate.application.model.*;
 import com.zenika.hibernate.domain.LibraryService;
+import com.zenika.hibernate.infrastructure.repository.BookRepository;
+import com.zenika.hibernate.infrastructure.repository.model.BookEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.data.web.SortDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 @Slf4j
 @RestController
@@ -20,6 +22,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class LibraryController {
     private final LibraryService libraryService;
+    private final BookRepository bookRepository;
 
     @PostMapping("author")
     void addAuthor(@RequestBody NewAuthorDto authorDto) {
@@ -52,20 +55,9 @@ public class LibraryController {
     }
 
     @PostMapping("author/{authorId}/book")
-    long addBook(@PathVariable long authorId,@RequestBody NewBookDto bookDto) {
+    long addBook(@PathVariable long authorId, @RequestBody NewBookDto bookDto) {
         log.info("addBook {}", bookDto);
         return libraryService.addBook(authorId, bookDto);
-    }
-
-    /**
-     * Impossible to make it like this : the stream is close before being read and convert to json!!!!
-     * @param id author id
-     */
-    @GetMapping("author/{id}/book")
-    @Transactional(readOnly = true)
-    Stream<BookWithAuthorDto> getBooksForAuthor(@PathVariable Long id) {
-        log.info("get All Books using Stream");
-        return libraryService.getBooks(id);
     }
 
     @PutMapping("book/{id}/note")
@@ -92,6 +84,16 @@ public class LibraryController {
         libraryService.updateNotesFor(bookIds);
     }
 
+    @GetMapping("/search")
+    Page<BookWithAuthorDto> searchBooks(
+            @ParameterObject
+            @SortDefault(sort = "label", direction = Sort.Direction.ASC)
+            Pageable pageable,
+            @ParameterObject BookSearchRequestDto bookSearchRequest) {
+        log.info("searchBooks {}, pageable {}", bookSearchRequest, pageable);
+        return libraryService.searchWithSpecification(bookSearchRequest, pageable);
+    }
+
     @GetMapping("/book/{bookId}/audit")
     List<RevisionDto> auditBook(@PathVariable Long bookId) {
         log.info("Auditing Book {}", bookId);
@@ -104,5 +106,12 @@ public class LibraryController {
         log.info("Auditing Author {}", authorId);
 
         return libraryService.listAuthorRevision(authorId);
+    }
+
+    @GetMapping("/book/{bookId}/bad")
+    BookEntity getBookReallyBad(@PathVariable Long bookId) {
+        log.info("getBookReallyBad {}", bookId);
+        return bookRepository.findById(bookId)
+                .orElseThrow(IllegalArgumentException::new);
     }
 }

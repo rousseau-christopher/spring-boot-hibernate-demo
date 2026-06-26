@@ -2,7 +2,9 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/hibernate
     username: postgres
-    password: example
+    password: postgres
+    #hikari:
+      #connection-init-sql: CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
   jpa:
     hibernate:
@@ -11,12 +13,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
-        jdbc:
-          batch_size: 100
-        order_updates: true
     open-in-view: false
-  flyway:
-    enabled: false
+    database-platform: com.zenika.hibernate.infrastructure.repository.configuration.CustomPostgreSqlDialect
 
 management:
   endpoints:
@@ -29,7 +27,7 @@ logging:
     console: "%d{HH:mm:ss.SSS} %highlight(%-5level) %green(%thread) %cyan(%logger{15}) - %msg %yellow(%mdc) %n"
   level:
   # log transaction
-    org.springframework.orm.jpa.JpaTransactionManager: debug
+    org.springframework.orm.jpa.JpaTransactionManager: INFO
 
    # log JPA
     org.hibernate.SQL: DEBUG
@@ -41,9 +39,9 @@ logging:
     org.springframework.jdbc.core.StatementCreatorUtils: TRACE
 
     # request filter
-    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+    org.springframework.web.filter.CommonsRequestLoggingFilter: INFO
 
 
 
 springdoc:
-  show-actuator: true
+  show-actuator: false
