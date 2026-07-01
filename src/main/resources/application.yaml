@@ -9,7 +9,7 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: false  # alternative to show sql. But with less information than logger
+    show-sql: false
     properties:
       hibernate:
         format_sql: true

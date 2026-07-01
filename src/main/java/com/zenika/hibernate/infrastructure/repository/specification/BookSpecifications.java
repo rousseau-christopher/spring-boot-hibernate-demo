@@ -75,10 +75,11 @@ public class BookSpecifications {
                             Boolean.class,
                             author.get("address"),
                             criteriaBuild.literal("city"),
-                            criteriaBuild.literal(city)
+                            criteriaBuild.literal(city + "%")
 
                     )
             );
         };
     }
+
 }
